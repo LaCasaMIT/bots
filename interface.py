@@ -63,10 +63,14 @@ def create_dicts(cursor):
     rows = cursor.fetchall()
     rooms = {room : Type for room, Type in rows}
 
-    return prev_pts, gbm_attendance, retreat_attendance, REX_CPW, ebm_attendance, rooms
+    cursor.execute("""SELECT kerb, chores_completed FROM chores""")
+    rows = cursor.fetchall()
+    chores = {kerb : chores_completed for kerb, chores_completed in rows}
+
+    return prev_pts, gbm_attendance, retreat_attendance, REX_CPW, ebm_attendance, rooms, chores
 
 def calculate_points(residents, dicts, cursor):
-    prev_pts, gbm_attendance, retreat_attendance, REX_CPW, ebm_attendance, rooms = dicts
+    prev_pts, gbm_attendance, retreat_attendance, REX_CPW, ebm_attendance, rooms, chores = dicts
     for r in residents:
         #previous pts
         r.previous_pts = prev_pts[r.kerb]
@@ -105,6 +109,11 @@ def calculate_points(residents, dicts, cursor):
         #room assignment pts
         if rooms[r.room] == "SINGLE": r.room_assignment_pts = .5
         elif rooms[r.room] == "DOUBLE": r.room_assignment_pts = 1
+
+        #chores pts
+        cursor.execute("SELECT total_chores FROM chores_total")
+        total_chores = cursor.fetchall()[0][0]
+        r.chores_pts = chores[r.kerb] / total_chores
 
         r.set_all_pts(cursor)
 
