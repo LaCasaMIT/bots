@@ -113,7 +113,7 @@ def calculate_points(residents, dicts, cursor):
         #chores pts
         cursor.execute("SELECT total_chores FROM chores_total")
         total_chores = cursor.fetchall()[0][0]
-        r.chores_pts = chores[r.kerb] / total_chores
+        r.chores_pts = chores[r.kerb] * .05
 
         r.set_all_pts(cursor)
 
