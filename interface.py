@@ -1,7 +1,7 @@
 import pymysql
 
 class Resident:
-    def __init__(self, fname, lname, kerb, year, onExec):
+    def __init__(self, fname, lname, kerb, year, onExec, room):
         self.fname = fname
         self.lname = lname
         self.kerb = kerb
@@ -14,6 +14,7 @@ class Resident:
         self.meeting_pts = 0
         self.total_housing_pts = 0
         self.onExec = onExec
+        self.room = room
     
     def set_all_pts(self, cursor):
         self.total_housing_pts += \
@@ -32,9 +33,9 @@ def create_residents(cursor):
     rows = cursor.fetchall()
 
     residents = []
-    for fname, lname, kerb, year, position, course in rows:
+    for fname, lname, kerb, year, position, course, room in rows:
         onExec = position != ""
-        resident = Resident(fname, lname, kerb, year, onExec)
+        resident = Resident(fname, lname, kerb, year, onExec, room)
         residents.append(resident)
     
     return residents
@@ -57,10 +58,15 @@ def create_dicts(cursor):
     cursor.execute("""SELECT * FROM EBM_attendance""")
     rows = cursor.fetchall()
     ebm_attendance = {kerb: [status1, status2, status3, status4] for fname, lname, kerb, status1, status2, status3, status4 in rows}
-    return prev_pts, gbm_attendance, retreat_attendance, REX_CPW, ebm_attendance
+    
+    cursor.execute("""SELECT * FROM rooms""")
+    rows = cursor.fetchall()
+    rooms = {room : Type for room, Type in rows}
+
+    return prev_pts, gbm_attendance, retreat_attendance, REX_CPW, ebm_attendance, rooms
 
 def calculate_points(residents, dicts, cursor):
-    prev_pts, gbm_attendance, retreat_attendance, REX_CPW, ebm_attendance = dicts
+    prev_pts, gbm_attendance, retreat_attendance, REX_CPW, ebm_attendance, rooms = dicts
     for r in residents:
         #previous pts
         r.previous_pts = prev_pts[r.kerb]
@@ -95,6 +101,10 @@ def calculate_points(residents, dicts, cursor):
 
         else: 
             r.meeting_pts = (meetings_attended/4) * .5
+
+        #room assignment pts
+        if rooms[r.room] == "SINGLE": r.room_assignment_pts = .5
+        elif rooms[r.room] == "DOUBLE": r.room_assignment_pts = 1
 
         r.set_all_pts(cursor)
 
