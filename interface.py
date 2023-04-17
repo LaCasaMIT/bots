@@ -111,8 +111,8 @@ def calculate_points(residents, dicts, cursor):
         elif rooms[r.room] == "DOUBLE": r.room_assignment_pts = 1
 
         #chores pts
-        cursor.execute("SELECT total_chores FROM chores_total")
-        total_chores = cursor.fetchall()[0][0]
+        # cursor.execute("SELECT total_chores FROM chores_total")
+        # total_chores = cursor.fetchall()[0][0]
         r.chores_pts = chores[r.kerb] * .05
 
         r.set_all_pts(cursor)
