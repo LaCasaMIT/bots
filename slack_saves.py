@@ -67,5 +67,5 @@ def send_slack_reminder():
         print("Error " + str(e))
 
 if __name__ == "__main__":
-    # send_slack_reminder()
+    send_slack_reminder()
     pass
