@@ -8,7 +8,7 @@ from slack_sdk.errors import SlackApiError
 
 def send_slack_reminder():
     slack_bot_token = "xoxb-281080591042-3827107045335-yELajiBDLrLQKYOxXrVoW2h5"
-    #hi
+
     channel_id = "C03LEG2BN3C"
     # channel_id = "C04BT71QW12" #test bots channel ID
 
