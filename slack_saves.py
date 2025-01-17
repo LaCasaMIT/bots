@@ -7,14 +7,15 @@ from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 
 def send_slack_reminder():
-    slack_bot_token = "xoxb-281080591042-3827107045335-yELajiBDLrLQKYOxXrVoW2h5"
-
-    channel_id = "C03LEG2BN3C"
-    # channel_id = "C04BT71QW12" #test bots channel ID
+    # channel_id = "C03LEG2BN3C"
+    channel_id = "C04BT71QW12" #test bots channel ID
 
     # connection = pymysql.connect(host="sql.mit.edu", user="la_casa", passwd="la_casa-webmaster", database="la_casa+site")
     connection = pymysql.connect(host="sql.mit.edu", user="la_casa", passwd="la_casa-webmaster", db="la_casa+site")
     cursor = connection.cursor()
+
+    cursor.execute("""SELECT token FROM bot_tokens WHERE bot_tokens.name=%s""", ("saves",))
+    slack_bot_token = cursor.fetchall()[0][0]
 
     today = date.today().strftime("%Y-%m-%d")
     cursor.execute("""SELECT people.fname, people.lname, saves.request, people.dietary_restriction FROM saves LEFT JOIN people ON saves.kerb=people.kerb WHERE saves.day=%s""", (today,))

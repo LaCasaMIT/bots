@@ -5,15 +5,23 @@ import pymysql #works on computer
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 
+# import ssl
+# import certifi
+
+# # add this line to point to your certificate path
+# ssl_context = ssl.create_default_context(cafile=certifi.where())
+
 def send_slack_reminder():
-    slack_bot_token = "xoxb-281080591042-3691557209445-fLqYZqWGX5p3cDrpdjcfgvlv"
-    channel_id = "C03LEG2BN3C"
-    # channel_id = "C04BT71QW12" #test bots channel ID
+    # channel_id = "C03LEG2BN3C"
+    channel_id = "C04BT71QW12" #test bots channel ID
     submit_chores_google_form = "https://docs.google.com/forms/d/e/1FAIpQLScbM03rAQHELUz1cHCh56fkp7Ks3GcqHEhHXj8rjToutX01KQ/viewform?usp=sf_link"
     chores_deadline = "Sunday at 1pm"
     # connection = pymysql.connect(host="sql.mit.edu", user="la_casa", passwd="la_casa-webmaster", database="la_casa+site")
     connection = pymysql.connect(host="sql.mit.edu", user="la_casa", passwd="la_casa-webmaster", db="la_casa+site")
     cursor = connection.cursor()
+
+    cursor.execute("""SELECT token FROM bot_tokens WHERE bot_tokens.name=%s""", ("chores",))
+    slack_bot_token = cursor.fetchall()[0][0]
 
     cursor.execute("""SELECT active FROM chores_active""")
     active = cursor.fetchall()[0][0]
@@ -35,7 +43,7 @@ def send_slack_reminder():
     connection.commit()
     connection.close()
 
-    client = WebClient(token=os.environ.get(slack_bot_token))
+    client = WebClient(token=os.environ.get(slack_bot_token)) #,ssl=ssl_context)
     logger = logging.getLogger(__name__)
 
     try:
