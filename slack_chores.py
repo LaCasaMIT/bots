@@ -7,7 +7,7 @@ from slack_sdk.errors import SlackApiError
 
 # import ssl
 # import certifi
-
+#
 # # add this line to point to your certificate path
 # ssl_context = ssl.create_default_context(cafile=certifi.where())
 
