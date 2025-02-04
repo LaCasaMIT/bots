@@ -7,8 +7,8 @@ from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 
 def send_slack_reminder():
-    # channel_id = "C03LEG2BN3C"
-    channel_id = "C04BT71QW12" #test bots channel ID
+    channel_id = "C03LEG2BN3C"
+    # channel_id = "C04BT71QW12" #test bots channel ID
 
     # connection = pymysql.connect(host="sql.mit.edu", user="la_casa", passwd="la_casa-webmaster", database="la_casa+site")
     connection = pymysql.connect(host="sql.mit.edu", user="la_casa", passwd="la_casa-webmaster", db="la_casa+site")
