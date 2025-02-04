@@ -12,8 +12,8 @@ from slack_sdk.errors import SlackApiError
 # ssl_context = ssl.create_default_context(cafile=certifi.where())
 
 def send_slack_reminder():
-    # channel_id = "C03LEG2BN3C"
-    channel_id = "C04BT71QW12" #test bots channel ID
+    channel_id = "C03LEG2BN3C"
+    # channel_id = "C04BT71QW12" #test bots channel ID
     submit_chores_google_form = "https://docs.google.com/forms/d/e/1FAIpQLScbM03rAQHELUz1cHCh56fkp7Ks3GcqHEhHXj8rjToutX01KQ/viewform?usp=sf_link"
     chores_deadline = "Sunday at 1pm"
     # connection = pymysql.connect(host="sql.mit.edu", user="la_casa", passwd="la_casa-webmaster", database="la_casa+site")
